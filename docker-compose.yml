@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: whatsapp
+    ports:
+      - "3333:3333"
