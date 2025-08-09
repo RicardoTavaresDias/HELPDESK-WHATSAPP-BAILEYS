@@ -7,7 +7,8 @@ const envSchema = z.object({
   HOST_DB: z.string(),
   DATABASE: z.string(),
   PASSWORD: z.string(),
-  PORT_DB: z.coerce.number(),
+  PORT_DB: z.coerce.number().default(5432),
+  GEMINI_API_KEY: z.string()
 })
 
 export const env = envSchema.parse(process.env)
