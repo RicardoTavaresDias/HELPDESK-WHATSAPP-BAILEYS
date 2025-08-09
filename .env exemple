@@ -1,0 +1,7 @@
+# HTTP
+#PORT=3333
+
+SECRET=
+
+# Gemini
+GEMINI_API_KEY = 
