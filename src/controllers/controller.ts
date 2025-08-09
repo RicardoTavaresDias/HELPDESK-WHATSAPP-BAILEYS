@@ -12,3 +12,12 @@ export class ChatbotController {
     }
   }
 }
+
+/*
+  QUERY BANCO DE DADOS POSTGRESS RENDER
+  
+  await client.connect();
+  const res = await client.query('SELECT * FROM called');
+  console.log(res.rows); // resultado da query
+
+*/

@@ -1,7 +1,13 @@
 # HTTP
-#PORT=3333
+PORT=
 
 SECRET=
 
 # Gemini
-GEMINI_API_KEY = 
+GEMINI_API_KEY= 
+
+USER_DB=   # usuário do PostgreSQL
+HOST_DB=   # host ou IP do servidor
+DATABASE=  # nome do banco
+PASSWORD=  # senha do usuário
+PORT_DB=   # porta padrão do PostgreSQL
