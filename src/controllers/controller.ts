@@ -1,5 +1,6 @@
 import bootWhatsappBaileys  from "@/services/whatsappService";
 import { Request, Response } from "express";
+import client from "@/config/postgres.config";
 
 export class ChatbotController {
   get (request: Request, response: Response){
@@ -11,15 +12,10 @@ export class ChatbotController {
       response.status(500).json({ message: error })
     }
   }
+
+  async getDatabase (request: Request, response: Response) {
+    await client.connect();
+    const res = await client.query('SELECT id, name, email, role FROM "user"');
+    response.status(200).json(res.rows)
+  }
 }
-
-/*
-  QUERY BANCO DE DADOS POSTGRESS RENDER
-  
-  import client from "@/config/postgres.config";
-
-  await client.connect();
-  const res = await client.query('SELECT * FROM called');
-  console.log(res.rows); // resultado da query
-
-*/
