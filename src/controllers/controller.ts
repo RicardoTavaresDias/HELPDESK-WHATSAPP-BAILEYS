@@ -1,10 +1,12 @@
 import bootWhatsappBaileys  from "@/services/whatsappService";
 import { Request, Response } from "express";
-import client from "@/config/postgres.config";
 import { main } from "@/services/gemini.js";
+import Repository from "@/repositories/repository";
 
 export class ChatbotController {
-  get (request: Request, response: Response){
+  repository = new Repository()
+
+  get = (request: Request, response: Response) => {
     try {
       const result = bootWhatsappBaileys.getQRCode()
       response.status(200).json({ message: result })
@@ -14,14 +16,12 @@ export class ChatbotController {
     }
   }
 
-  async getDatabase (request: Request, response: Response) {
-    const result = await main()
-    response.status(200).json({ response: result })
+  getDatabase = async (request: Request, response: Response) => {
+    // Get users database
+    const result = await this.repository.users()
 
-    /*
-      await client.connect();
-      const res = await client.query('SELECT id, name, email, role FROM "user"');
-      response.status(200).json(res.rows)
-    */
+    // resposta AI
+    //const result = await main()
+    response.status(200).json({ response: result })
   }
 }
