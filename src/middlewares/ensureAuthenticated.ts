@@ -2,10 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken"
 import { authConfig } from "@/config/jwt"
 
-type userType = {
-  role: string 
-}
-
 function ensureAuthenticated (request: Request, response: Response, next: NextFunction) {
    try {
     const authHeader = request.headers.authorization

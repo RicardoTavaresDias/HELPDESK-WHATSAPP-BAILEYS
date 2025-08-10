@@ -1,7 +1,7 @@
 import makeWASocket, { DisconnectReason, useMultiFileAuthState, WASocket} from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
 import fs from 'node:fs/promises'
-import { geminaiAI } from "./gemini"
+import { geminaiAI } from "./gemini.services"
 
 class BootWhatsappBaileys {
   private sock: WASocket | null = null

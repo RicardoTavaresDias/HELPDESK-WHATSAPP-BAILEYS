@@ -1,4 +1,4 @@
-import bootWhatsappBaileys  from "@/services/whatsappService";
+import bootWhatsappBaileys  from "@/services/whatsapp.services";
 import { Request, Response } from "express";
 
 export class ChatbotController {
