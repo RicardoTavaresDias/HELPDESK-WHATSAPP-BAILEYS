@@ -7,6 +7,6 @@ async function start() {
   await bootWhatsappBaileys.initial()
 }
 
-//start()
+start()
 
 app.listen(env.PORT, () => console.log("Server running on port " + env.PORT));

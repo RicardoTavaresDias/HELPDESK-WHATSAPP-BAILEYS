@@ -1,6 +1,7 @@
 import makeWASocket, { DisconnectReason, useMultiFileAuthState, WASocket} from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
 import fs from 'node:fs/promises'
+import { geminaiAI } from "./gemini"
 
 class BootWhatsappBaileys {
   private sock: WASocket | null = null
@@ -33,9 +34,7 @@ class BootWhatsappBaileys {
       const text = message.message?.conversation || message.message?.extendedTextMessage
 
       if(!text) return
-
-      console.log("Mensagem recebida:", text)
-      await this.sock?.sendMessage(message.key.remoteJid as string, {  text: "Recebido com sucesso! Esta é uma resposta automática SUA MENSAGEM:  " +  text})
+      await this.sock?.sendMessage(message.key.remoteJid as string, {  text: await geminaiAI(text) as string })
     })
   }
 

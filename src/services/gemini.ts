@@ -1,83 +1,67 @@
 import Repository from "@/repositories/repository";
+import { gemini } from "@/config/google.config"
+import { Type } from "@google/genai";
+import { tablePostgres } from "@/utils/table-postgres"; 
+import { systemInstruction } from "@/utils/geminai-systemInstruction";
 
-import { GoogleGenAI, Type } from "@google/genai";
-import { env } from "@/config/env.config";
-
-/*
-  async function main() {
-    const response = await AI.models.generateContent({
-      model,
-      contents: "Quem é você? o que você poderá me ajudar?",
-    });
-    
-    return response.text
-  }
-*/
-
-
-/* ------------------------------------------------------------------------------------------------------ */
-
-const AI = new GoogleGenAI({
-  apiKey: env.GEMINI_API_KEY
-});
-
-const prompt = `
-  Verifica se existe nome Ricardo cadastrado no banco de dados?
-
-  com a base do retorno dos dados da query, responder no retorno id, email e nome completo, e dizer que o mesmo esta cadastrado no sistema, passar em texto em portugues brasil numa forma natural, caso não ter resultado da query informar em texto que não existe o usuario mensionando no sistema.
-
-`.trim()
-
-async function testeAI () {
-  const response = await AI.models.generateContent({
-    model: 'gemini-2.5-flash',
+async function geminaiAI (question: any) {
+  const responseAI = await gemini.models.generateContent({
+    model: 'gemini-2.5-pro',
     contents: [{
       role: "user",
       parts: [{
-        text: prompt
+        text: question
       }]
     }],
     config: {
+      temperature: 0.5,
       tools: [{
         functionDeclarations: [{
-          name: 'searchUsers',
-          description: "Busca um usuário no banco de dados pelo nome.",
+          name: 'executeSqlQuery',
+          description: `
+            Realiza uma query no Postgress para buscar informações sobre as tabelas do banco de dados.
+
+            Só pode realizar operações de busca (SELECT), não é permitido a geração de qualquer operação de escrita.
+
+            Tables:
+            """""""
+            ${tablePostgres}
+            """""""
+            todas operações devem retornar um máximo de 50 itens.
+          `.trim(),
           parameters: {
             type: Type.OBJECT,
             properties: {
-              name: {
+              querySQL: {
                 type: Type.STRING,
-                description: "O nome do usuário a ser buscado."
+                description: "A query SQL a ser executada."
               }
             },
-            required: ['name']
+            required: ['querySQL']
           }
         }]
-      }]
+      }],
+      systemInstruction: systemInstruction
     }
   })
 
-  if (response.functionCalls && response.functionCalls.length > 0) {
-    const functionCalls = response.functionCalls[0]
-    console.log('Função a ser chamada', functionCalls.name)
-    console.log('Argumentos', JSON.stringify(functionCalls.args))
+  if (responseAI.functionCalls && responseAI.functionCalls.length > 0) {
+    const functionCalls = responseAI.functionCalls[0]   
 
-    if (functionCalls.name === 'searchUsers') {
-      const name = functionCalls.args?.name;
-      //@ts-ignore
-      const functionResult = await searchUsers(name);
-      console.log("Resultado da função: ", functionResult)
-
-      // Parte 2: Envia o resultado da função de volta para o Gemini
-      const finalResult  = await AI.models.generateContent({
-        model: 'gemini-2.5-flash',
+    if (functionCalls.name === 'executeSqlQuery') { // Função a ser chamada functionCalls.name
+      const query = functionCalls.args?.querySQL; // Argumentos functionCalls.args
+      const functionResult = await executeSqlQuery(query);
+  
+      // Envia o resultado da função de volta para o Gemini
+      const geminaiResultQuestion  = await gemini.models.generateContent({
+        model: 'gemini-2.5-pro',
         contents: [
-          { role: 'user', parts: [{ text: prompt }] },
+          { role: 'user', parts: [{ text: question }] },
           {
             role: 'function',
             parts: [{
               functionResponse: {
-                name: 'searchUsers',
+                name: 'executeSqlQuery',
                 response: { result: functionResult }
               }
             }]
@@ -85,29 +69,20 @@ async function testeAI () {
         ]
       })
 
-      console.log("------------------------");
-      console.log("Resposta final da IA:");
-      console.log(finalResult.text);
-      console.log("------------------------");
-
+      return geminaiResultQuestion.text
     } else {
-      console.log('Chamada de função desconhecida:', functionCalls.name)
+      return functionCalls.name
     }
     
   } else {
-    console.log("Nenhuma chamada de função encontrada na resposta.")
-    console.log(response.text)
+    return responseAI.text
   }
 }
 
-
-
-async function searchUsers (name: string) {
+async function executeSqlQuery (querySQL: any) {
   const repository = new Repository()
-  const result = await repository.users(name)
+  const result = await repository.users(querySQL)
   return JSON.stringify(result)
 }
 
-export { testeAI }
-
-/* ----------------------------------------------------------------------------------------------- */
+export { geminaiAI }
