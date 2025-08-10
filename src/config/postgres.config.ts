@@ -1,8 +1,7 @@
-import postgress from 'pg';
-const { Client } = postgress;
+import { Pool } from 'pg';
 import { env } from './env.config';
 
-const client = new Client({
+const db = new Pool({
   user: env.USER_DB,                     // usuário do PostgreSQL
   host: env.HOST_DB,                    // host ou IP do servidor
   database: env.DATABASE,               // nome do banco
@@ -11,4 +10,4 @@ const client = new Client({
   ssl: { rejectUnauthorized: false }  // Render exige SSL
 })
 
-export default client
+export default db

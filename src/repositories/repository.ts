@@ -1,13 +1,9 @@
-import client from "@/config/postgres.config";
+import db from "@/config/postgres.config";
 
 class Repository {
-  constructor () {
-    client.connect()
-  }
-
-  async users () {
-    const result = await client.query('SELECT id, name, email, role FROM "user"');
-    return result.rows
+  async users (name: string) {
+    const query = await db.query(`SELECT id, name, email, role FROM "user" WHERE name LIKE '%${name}%'`);
+    return query.rows
   }
 }
 
