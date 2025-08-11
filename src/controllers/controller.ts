@@ -9,7 +9,7 @@ export class ChatbotController {
     //const result = await geminaiAI(request.body.question)
     //console.log(result)
     const repository = new Repository()
-    console.log(await repository.calledsUser('mateus@email.com'))
+    response.status(200).json(await repository.calledID('77'))
     return
     try {
       const result = bootWhatsappBaileys.getQRCode()

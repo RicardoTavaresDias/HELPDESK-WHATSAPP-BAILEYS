@@ -10,7 +10,7 @@ class Repository {
     }
   }
 
-  private async queryCalledUsers (queryCalledEmail: string) {
+  private async queryCalledUsers (searchForInformation: string) {
     const query = await db.query(`
 
       SELECT
@@ -45,7 +45,7 @@ class Repository {
       LEFT JOIN "comments" co on co.id = cc.fk_comments
       LEFT JOIN "called_services" cs on cs.fk_called = c.id
       LEFT JOIN "services" s on s.id = cs.fk_services
-      WHERE ${queryCalledEmail}
+      WHERE ${searchForInformation}
       GROUP BY c.id, c.title_called, c.description, c.call_status, c."appointment_Time", c.updated_at, ut.name, ut.email, ut.role, uc.name, uc.email, uc.role
 
     `.trim())
@@ -53,7 +53,7 @@ class Repository {
     return query.rows
   }
 
-  async calledsUser (email: string) {
+  async calleds (email: string) {
     const userCustomer = await this.queryCalledUsers(`uc.email = '${email}'`)
     if(userCustomer.length > 0) {
       return userCustomer
@@ -61,6 +61,10 @@ class Repository {
     
     return await this.queryCalledUsers(`ut.email = '${email}'`)
   }
+
+  async calledID (id: string) {
+    return await this.queryCalledUsers(`c.id = ${id}`)
+  } 
 }
 
 export default Repository

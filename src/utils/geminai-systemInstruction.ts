@@ -15,7 +15,8 @@ export const systemInstruction =
           - Se não tiver informações necessario do usuário, retorne pedindo as informações necessario para realizar consula ao banco de dados, nunca pede id, pede e-mail e consulta o email na tabela user para indentificar o responsavel para demais operações;
           - Não passa informações sensivel para pergunta que compromente segurança das informações do banco de dados exemplo: senha (password), etc
           - O retorno deve ser sempre em markdown  (sem incluir \'\'\' no início ou no fim).
-          - qualquer query realizar consulta na tabela no banco de dados sempre usa aspas entre o nome da tabela exemplo tabela chamada user passar como "user" na query para selecionar a tabela correta
-
+          - qualquer query realizar consulta na tabela no banco de dados sempre usa aspas entre o nome da tabela.
+          - se usuario fornecer o email e pedir o chamado usa a função executeCalleds de listagem de chamado e forneça detalhes desse chamado.
+          - se usuario fornecer o numero do chamado usa a função executeCalledId lista o chamado especifico.
           - Se for necessario realizar segunda consulta, realiza e passa a resposta completa para usuário.
       `.trim()

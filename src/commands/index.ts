@@ -1,9 +1,17 @@
-import { executeQuery } from "./executeQuery.command";
-import { executeCalleds } from "./executeCalleds.command"
+import { executeQuery, executeQueryProperties } from "./executeQuery.command";
+import { executeCalleds, executeCalledsProperties } from "./executeCalleds.command"
+import { executeCalledId, executeCalledIDProperties } from "./executeCalledId.command"
 
 const command = {
   executeQuery,
-  executeCalleds
+  executeCalleds,
+  executeCalledId
 }
 
-export { command }
+const commandProperties = {
+  executeQueryProperties,
+  executeCalledsProperties,
+  executeCalledIDProperties
+}
+
+export { command, commandProperties }
