@@ -5,7 +5,7 @@ import { geminaiAI } from "./gemini.services"
 
 class BootWhatsappBaileys {
   private sock: WASocket | null = null
-  public QrCode: string | null = null
+  private QrCode: string | null = null
 
   async initial () {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info')
@@ -67,7 +67,7 @@ class BootWhatsappBaileys {
   }
 
   // reconexão
-  async reconnect (shouldReconnect: boolean) {
+  private async reconnect (shouldReconnect: boolean) {
     if (shouldReconnect) {
       // Realiza reconexão após perca de conexão.
       await this.initial()
