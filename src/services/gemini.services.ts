@@ -1,12 +1,12 @@
-import Repository from "@/repositories/repository";
 import { gemini } from "@/config/google.config"
 import { Type } from "@google/genai";
 import { tablePostgres } from "@/utils/table-postgres"; 
 import { systemInstruction } from "@/utils/geminai-systemInstruction";
+import { command } from "@/commands";
 
 async function geminaiAI (question: any) {
   const responseAI = await gemini.models.generateContent({
-    model: 'gemini-2.5-pro',
+    model: 'gemini-2.5-flash',
     contents: [{
       role: "user",
       parts: [{
@@ -17,7 +17,7 @@ async function geminaiAI (question: any) {
       temperature: 0.5,
       tools: [{
         functionDeclarations: [{
-          name: 'executeSqlQuery',
+          name: 'executeQuery',
           description: `
             Realiza uma query no Postgress para buscar informações sobre as tabelas do banco de dados.
 
@@ -48,20 +48,24 @@ async function geminaiAI (question: any) {
   if (responseAI.functionCalls && responseAI.functionCalls.length > 0) {
     const functionCalls = responseAI.functionCalls[0]   
 
-    if (functionCalls.name === 'executeSqlQuery') { // Função a ser chamada functionCalls.name
+    if (functionCalls.name === 'executeQuery') { // Função a ser chamada functionCalls.name
+      console.log("função com argumento", functionCalls.args)
       const query = functionCalls.args?.querySQL; // Argumentos functionCalls.args
-      const functionResult = await executeSqlQuery(query);
+      const functionResult = await command.executeQuery(query);
   
       // Envia o resultado da função de volta para o Gemini
       const geminaiResultQuestion  = await gemini.models.generateContent({
-        model: 'gemini-2.5-pro',
+        model: 'gemini-2.5-flash',
+        config: {
+          temperature: 0.5
+        },
         contents: [
           { role: 'user', parts: [{ text: question }] },
           {
             role: 'function',
             parts: [{
               functionResponse: {
-                name: 'executeSqlQuery',
+                name: 'executeQuery',
                 response: { result: functionResult }
               }
             }]
@@ -69,20 +73,17 @@ async function geminaiAI (question: any) {
         ]
       })
 
+      console.log("Resposta AI com funcção e resultado", geminaiResultQuestion.text)
       return geminaiResultQuestion.text
     } else {
+      console.log("nome da função vai ser chamada", functionCalls.name)
       return functionCalls.name
     }
     
   } else {
+    console.log("Resposta AI sem Função", responseAI.text)
     return responseAI.text
   }
-}
-
-async function executeSqlQuery (querySQL: any) {
-  const repository = new Repository()
-  const result = await repository.users(querySQL)
-  return JSON.stringify(result)
 }
 
 export { geminaiAI }
