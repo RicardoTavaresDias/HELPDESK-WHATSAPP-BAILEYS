@@ -1,7 +1,9 @@
 import { executeQuery } from "./executeQuery.command";
+import { executeCalleds } from "./executeCalleds.command"
 
 const command = {
-  executeQuery
+  executeQuery,
+  executeCalleds
 }
 
 export { command }
