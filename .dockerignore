@@ -2,3 +2,6 @@ auth_info
 node_modules
 build
 .git
+.env_exemple
+.env
+.gitignore
