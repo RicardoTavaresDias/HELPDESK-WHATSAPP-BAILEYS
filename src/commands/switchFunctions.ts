@@ -1,7 +1,7 @@
 import { command } from "@/commands";
-import { FunctionCall } from "@google/genai";
+import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
 
-async function switchFunctions (functionCalls: FunctionCall) {
+async function switchFunctions (functionCalls: AllFunctionCalls) {
   let functionResult
 
   switch (functionCalls.name) {
@@ -15,8 +15,8 @@ async function switchFunctions (functionCalls: FunctionCall) {
       return functionResult = await command.executeCalledId(functionCalls.args?.id);
   
     default:
-      console.log("nome da função vai ser chamada", functionCalls.name)
-      return functionCalls.name
+      // console.log("nome da função vai ser chamada", functionCalls.name)
+      return // functionCalls.name
   }
 }
 

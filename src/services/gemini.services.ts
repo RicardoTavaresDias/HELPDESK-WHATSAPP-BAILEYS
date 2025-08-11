@@ -1,14 +1,15 @@
 import { gemini } from "@/config/google.config"
 import { systemInstruction } from "@/utils/geminai-systemInstruction";
-import { command, commandProperties } from "@/commands";
+import { commandProperties } from "@/commands";
 import { switchFunctions } from "@/commands/switchFunctions";
+import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
 
 /*
   functionCalls.name => nome da função criada para ser chamada
   functionCalls.args => parametro da função brigatório para ser passado na função
 */
 
-async function geminaiAI (question: any) {
+async function geminaiAI (question: string) {
   const responseAI = await gemini.models.generateContent({
     model: 'gemini-2.5-flash',
     contents: [{
@@ -36,7 +37,7 @@ async function geminaiAI (question: any) {
     const functionCalls = responseAI.functionCalls[0]
 
     // Busca tipo de função que a IA vai ultilizar.
-    const functionResult = await switchFunctions(functionCalls)
+    const functionResult = await switchFunctions(functionCalls as AllFunctionCalls)
 
     // Envia o resultado da função de volta para o Gemini
     const geminaiResultQuestion  = await gemini.models.generateContent({

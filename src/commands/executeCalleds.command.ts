@@ -1,7 +1,7 @@
 import Repository from "@/repositories/repository"
 import { Type } from "@google/genai"
 
-async function executeCalleds (emailUser: any) {
+async function executeCalleds (emailUser: string) {
   const repository = new Repository()
   const result = await repository.calleds(emailUser)
   return JSON.stringify(result)

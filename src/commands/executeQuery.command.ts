@@ -2,7 +2,7 @@ import Repository from "@/repositories/repository"
 import { tablePostgres } from "@/utils/table-postgres"
 import { Type } from "@google/genai"
 
-async function executeQuery (querySQL: any) {
+async function executeQuery (querySQL: string) {
   const repository = new Repository()
   const result = await repository.variousqueriesAI(querySQL)
   return JSON.stringify(result)
