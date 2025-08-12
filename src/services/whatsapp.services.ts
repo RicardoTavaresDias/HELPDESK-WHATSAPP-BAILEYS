@@ -34,7 +34,8 @@ class BootWhatsappBaileys {
       const text = message.message?.conversation || message.message?.extendedTextMessage
 
       if(!text) return
-      await this.sock?.sendMessage(message.key.remoteJid as string, {  text: await geminaiAI(text) as string })
+      //@ts-ignore
+      await this.sock?.sendMessage(message.key.remoteJid, {  text: await geminaiAI(text) })
     })
   }
 
