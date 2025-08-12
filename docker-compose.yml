@@ -6,17 +6,8 @@ services:
       dockerfile: Dockerfile
     image: nodejs
     container_name: apiChatBot_AI
-    #restart: unless-stopped # Boa prática: reinicia o container a menos que seja parado manualmente
-
     # Adicionado para carregar variáveis de ambiente do seu arquivo .env
-    # Assim você não precisa configurá-las no Dockerfile
     env_file:
       - .env
     ports:
       - "3000:3000"
-    volumes:
-      # SOLUÇÃO: Esta é a parte mais importante.
-      # Mapeia a pasta './auth_info_data' no seu servidor (host) para
-      # a pasta '/usr/src/app/auth_info' dentro do container.
-      # O Docker vai criar a pasta 'auth_info_data' no mesmo diretório do seu docker-compose.yml.
-      - ./auth_info_data:/usr/src/app/auth_info
