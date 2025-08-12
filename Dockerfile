@@ -24,7 +24,7 @@ RUN npm run build
 # ENV PORT_DB=
 
 # Expõe a porta que a sua aplicação vai usar
-EXPOSE 3334
+EXPOSE 3000
 
 # Comando para rodar a aplicação quando o contêiner iniciar
 CMD ["npm", "start"]

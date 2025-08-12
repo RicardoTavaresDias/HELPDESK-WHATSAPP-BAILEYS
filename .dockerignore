@@ -5,3 +5,6 @@ build
 .env_exemple
 .env
 .gitignore
+docker-compose.yml
+Dockerfile
+.dockerignore
