@@ -9,6 +9,7 @@ class BootWhatsappBaileys {
   private sock: WASocket | null = null
   private QrCode: string | null = null
   private deleteSession: (() => Promise<void>) | undefined
+  private reconnecting = false;
 
   async initial () {
     const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
@@ -52,40 +53,45 @@ class BootWhatsappBaileys {
 
   // Conexão 
   private connection () {
-    this.sock?.ev.on('connection.update', async (update) => {
-      const { connection, lastDisconnect } = update
+    return new Promise((resolve, reject) => {
+      this.sock?.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect } = update
 
-      if (connection === 'close') {
-        const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-        console.log('Conexão encerrada. Reconectando...')
-        await this.reconnect(shouldReconnect)
+        if (connection === 'close') {
+          const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
+          console.log('Conexão encerrada. Reconectando...')
+          await this.reconnect(shouldReconnect)
 
-      } else if (connection === 'open') {
-        console.log('Conectado com sucesso ao WhatsApp')
-        this.QrCode = null
-      }
+        } else if (connection === 'open') {
+          resolve('Conectado ao WhatsApp')
+          this.QrCode = null
+        }
 
-      if(update.qr) {
-        this.QrCode = update.qr
-        console.log('QR code atualizado')
-      }
+        if(update.qr) {
+          resolve(update.qr)
+          //console.log('QR code atualizado')
+        }
+      })
     })
   }
 
   // reconexão
   private async reconnect (shouldReconnect: boolean) {
+    if (this.reconnecting) return
+    this.reconnecting = true
+
     if (shouldReconnect) {
       // Realiza reconexão após perca de conexão.
       await this.initial()
     }else {
       // Remove a pasta auth_info e reconecta novamente no baileys
-      //@ts-ignore
-      this.deleteSession()
+      if (this.deleteSession) await this.deleteSession()
       this.QrCode = null
+      this.sock = null
       console.log("Conexão encerrada, escanear QRCODE novamente.")
-      await this.initial()
     }
-    return
+
+    this.reconnecting = false;
   }
 
   getQRCode () {

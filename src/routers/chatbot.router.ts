@@ -8,3 +8,4 @@ const chatbotController = new ChatbotController()
 
 chatbotRouter.use(ensureAuthenticated)
 chatbotRouter.get("/", userAuthorization(["admin", "technical", "customer"]), chatbotController.get)
+chatbotRouter.get("/show", userAuthorization(["admin", "technical", "customer"]), chatbotController.show)
