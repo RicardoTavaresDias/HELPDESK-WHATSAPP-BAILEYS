@@ -1,14 +1,19 @@
-import makeWASocket, { DisconnectReason, useMultiFileAuthState, WASocket} from '@whiskeysockets/baileys'
+import makeWASocket, { DisconnectReason, WASocket} from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
-import fs from 'node:fs/promises'
 import { geminaiAI } from "./gemini.services"
+
+import { usePostgreSQLAuthState } from "postgres-baileys"; 
+import db from '@/config/postgres.config';
 
 class BootWhatsappBaileys {
   private sock: WASocket | null = null
   private QrCode: string | null = null
+  private deleteSession: (() => Promise<void>) | undefined
 
   async initial () {
-    const { state, saveCreds } = await useMultiFileAuthState('auth_info')
+    const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
+
+    this.deleteSession = deleteSession
 
     this.sock =  makeWASocket({
       auth: state,
@@ -74,7 +79,8 @@ class BootWhatsappBaileys {
       await this.initial()
     }else {
       // Remove a pasta auth_info e reconecta novamente no baileys
-      await fs.rm("auth_info", { recursive: true, force: true })
+      //@ts-ignore
+      this.deleteSession()
       this.QrCode = null
       console.log("Conexão encerrada, escanear QRCODE novamente.")
       await this.initial()
