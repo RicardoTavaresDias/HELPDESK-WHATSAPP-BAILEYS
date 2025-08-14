@@ -7,7 +7,6 @@ import db from '@/config/postgres.config';
 
 class BootWhatsappBaileys {
   private sock: WASocket | null = null
-  private QrCode: string | null = null
   private deleteSession: (() => Promise<void>) | undefined
   private reconnecting = false;
 
@@ -57,20 +56,22 @@ class BootWhatsappBaileys {
       this.sock?.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
 
-        if (connection === 'close') {
-          const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-          console.log('Conexão encerrada. Reconectando...')
-          await this.reconnect(shouldReconnect)
-
-        } else if (connection === 'open') {
-          resolve('Conectado ao WhatsApp')
-          this.QrCode = null
-        }
-
         if(update.qr) {
           resolve(update.qr)
           //console.log('QR code atualizado')
         }
+
+        if (connection === 'open') {
+          resolve('Conectado ao WhatsApp')
+          console.log("Conectado")
+        }
+
+        if (connection === 'close') {
+          const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
+          console.log('Conexão encerrada. Reconectando...')
+          await this.reconnect(shouldReconnect)
+        } 
+        
       })
     })
   }
@@ -86,16 +87,11 @@ class BootWhatsappBaileys {
     }else {
       // Remove a pasta auth_info e reconecta novamente no baileys
       if (this.deleteSession) await this.deleteSession()
-      this.QrCode = null
       this.sock = null
       console.log("Conexão encerrada, escanear QRCODE novamente.")
     }
 
     this.reconnecting = false;
-  }
-
-  getQRCode () {
-    return this.QrCode
   }
 }
 
