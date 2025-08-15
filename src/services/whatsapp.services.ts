@@ -3,10 +3,13 @@ import { Boom } from '@hapi/boom'
 import { geminaiAI } from "./gemini.services"
 import { usePostgreSQLAuthState } from "postgres-baileys"; 
 import db from '@/config/postgres.config';
+import { WebSocketServer } from 'ws'
 
 let removeSession: () => Promise<void>
 let sock: WASocket | null = null
 let reconnecting = false
+
+const ws = new WebSocketServer({ port: 3300 })
 
 async function bootWhatsappBaileysIA () {
   const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
@@ -30,6 +33,13 @@ function saveAuthInfo (saveCreds: () => Promise<void>) {
   sock.ev.on("creds.update", saveCreds)
 }
 
+// Envia para todos clientes conectados
+function broadcast(message: any) {
+  ws.clients.forEach((client) => {
+    client.send(JSON.stringify(message))
+  })
+}
+
 // Conexão 
 function connection () {
   return new Promise((resolve, reject) => {
@@ -39,17 +49,16 @@ function connection () {
 
       if(update.qr) {
         resolve(update.qr)
-        //console.log('QR code atualizado')
       }
 
       if (connection === 'open') {
-        resolve('Conectado ao WhatsApp')
-        console.log("Conectado")
+        broadcast({ type: 'open', data: 'connection' })
+        resolve("connection")
       }
 
       if (connection === 'close') {
-        const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-        console.log('Conexão encerrada. Reconectando...')
+        const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut      
+       // broadcast({ type: 'message', data: 'Conexão encerrada. Reconectando...' }) 
         await reconnect(shouldReconnect)
       } 
       
@@ -69,7 +78,7 @@ function connection () {
     // Remove a pasta auth_info e reconecta novamente no baileys
     if (removeSession) await removeSession()
     sock = null
-    console.log("Conexão encerrada, escanear QRCODE novamente.")
+    broadcast({ type: 'close', data: 'disconnected' }) 
   }
 
   reconnecting = false;
@@ -87,9 +96,13 @@ function sendMessage () {
     // Extrair texto da mensagem
     const text = message.message?.conversation || message.message?.extendedTextMessage
 
-    if(!text || !sock) return
-    //@ts-ignore
-    await sock.sendMessage(message.key.remoteJid, {  text: await geminaiAI(text) })
+    const jid = message.key.remoteJid
+    if(!jid || !sock) return
+   
+    (async () => {
+      const replayAI = await geminaiAI(text as string)
+      await sock.sendMessage(jid, {  text: replayAI || "um minuto" })
+    })()
   })
 }
 

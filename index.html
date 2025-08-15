@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Teste WebSocket</title>
+</head>
+<body>
+    <h1>Cliente WebSocket</h1>
+    <div id="log"></div>
+
+    <script>
+        // Troque pelo IP/porta do seu servidor
+        const ws = new WebSocket('ws://localhost:3300');
+
+        ws.onopen = () => {
+            log('✅ Conectado ao servidor WebSocket');
+            ws.send('Olá servidor!');
+        };
+
+        ws.onmessage = (event) => {
+            log('📩 Mensagem recebida: ' + event.data);
+        };
+
+        ws.onclose = () => {
+            log('❌ Conexão encerrada');
+        };
+
+        ws.onerror = (error) => {
+            log('⚠️ Erro: ' + error.message);
+        };
+
+        function log(message) {
+            const div = document.getElementById('log');
+            div.innerHTML += `<p>${message}</p>`;
+        }
+    </script>
+</body>
+</html>
