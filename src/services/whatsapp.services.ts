@@ -9,8 +9,6 @@ let removeSession: () => Promise<void>
 let sock: WASocket | null = null
 let reconnecting = false
 
-//const ws = new WebSocketServer({ port: 3300 })
-
 async function bootWhatsappBaileysIA () {
   const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
   removeSession = deleteSession
@@ -58,7 +56,6 @@ function connection () {
 
       if (connection === 'close') {
         const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut      
-       // broadcast({ type: 'message', data: 'Conexão encerrada. Reconectando...' }) 
         await reconnect(shouldReconnect)
       } 
       
