@@ -4,6 +4,7 @@ import { geminaiAI } from "./gemini.services"
 import { usePostgreSQLAuthState } from "postgres-baileys"; 
 import db from '@/config/postgres.config';
 import { ws } from '@/server';
+import PQueue from "p-queue"
 
 let removeSession: () => Promise<void>
 let sock: WASocket | null = null
@@ -96,7 +97,9 @@ function sendMessage () {
     const jid = message.key.remoteJid
      if(!jid || !sock) return
 
-    setMessage({ jid, sockUpsert: sock, text })
+    // Adicionar mensagem à fila controlando await varios requisições
+    const messageQueue = new PQueue({ concurrency: 5 });
+    messageQueue.add(() => setMessage({ jid, sockUpsert: sock!, text }))
   })
 }
 
