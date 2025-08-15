@@ -3,13 +3,13 @@ import { Boom } from '@hapi/boom'
 import { geminaiAI } from "./gemini.services"
 import { usePostgreSQLAuthState } from "postgres-baileys"; 
 import db from '@/config/postgres.config';
-import { WebSocketServer } from 'ws'
+import { ws } from '@/server';
 
 let removeSession: () => Promise<void>
 let sock: WASocket | null = null
 let reconnecting = false
 
-const ws = new WebSocketServer({ port: 3300 })
+//const ws = new WebSocketServer({ port: 3300 })
 
 async function bootWhatsappBaileysIA () {
   const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
