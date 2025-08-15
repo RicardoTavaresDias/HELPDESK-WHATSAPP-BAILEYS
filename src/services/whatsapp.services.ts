@@ -10,6 +10,9 @@ let removeSession: () => Promise<void>
 let sock: WASocket | null = null
 let reconnecting = false
 
+ // Adicionar mensagem à fila controlando await varios requisições
+const messageQueue = new PQueue({ concurrency: 5 });
+
 async function bootWhatsappBaileysIA () {
   const { state, saveCreds, deleteSession } = await usePostgreSQLAuthState(db, 'auth_info')
   removeSession = deleteSession
@@ -97,8 +100,6 @@ function sendMessage () {
     const jid = message.key.remoteJid
      if(!jid || !sock) return
 
-    // Adicionar mensagem à fila controlando await varios requisições
-    const messageQueue = new PQueue({ concurrency: 5 });
     messageQueue.add(() => setMessage({ jid, sockUpsert: sock!, text }))
   })
 }
