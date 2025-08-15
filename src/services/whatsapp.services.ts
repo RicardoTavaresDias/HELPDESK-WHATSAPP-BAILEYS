@@ -94,13 +94,39 @@ function sendMessage () {
     const text = message.message?.conversation || message.message?.extendedTextMessage
 
     const jid = message.key.remoteJid
-    if(!jid || !sock) return
-   
-    (async () => {
-      const replayAI = await geminaiAI(text as string)
-      await sock.sendMessage(jid, {  text: replayAI || "um minuto" })
-    })()
+     if(!jid || !sock) return
+
+    setMessage({ jid, sockUpsert: sock, text })
   })
+
+  // Envio de mensagem para Whatsapp
+  async function setMessage ({ jid, sockUpsert, text }: { jid: string, sockUpsert: WASocket, text: any }) {
+    try {
+      const validetion = await verifyUserWhatsapp({ jid, sockUpsert })
+      if(!validetion) return
+
+      await sock?.sendMessage(jid, { text: "🧠 Um minuto, analisando a informação..." })
+
+      const replayAI = await geminaiAI(text as string)
+      await sockUpsert.sendMessage(jid, {  text: replayAI || "um minuto" })
+    } catch (error) {
+      console.error('Erro ao processar mensagem:', error)
+    }
+  }
+
+  // Seguraça verificando se usurio esta cadastrado no sistema para uso Whatsapp
+  async function verifyUserWhatsapp ({ jid, sockUpsert }: { jid: string, sockUpsert: WASocket }) {
+    const existUserPhone = await db.query(`SELECT * FROM "user" WHERE phone = $1`, [jid?.split("@")[0]])
+
+    if(!existUserPhone.rows.length){
+      await sockUpsert.sendMessage(jid, { 
+        text: "Telefone não cadastrado no sistema, realizar cadastro do telefone no seu perfil de acesso, para ter melhor experiencia com suporte Whatsapp." 
+      })
+      return false
+    }
+
+    return true
+  }
 }
 
 export default bootWhatsappBaileysIA
