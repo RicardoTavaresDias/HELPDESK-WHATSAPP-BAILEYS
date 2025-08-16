@@ -2,7 +2,7 @@ import makeWASocket, { DisconnectReason, WASocket} from '@whiskeysockets/baileys
 import { Boom } from '@hapi/boom'
 import { geminaiAI } from "./gemini.services"
 import { usePostgreSQLAuthState } from "postgres-baileys"; 
-import db from '@/config/postgres.config';
+import db from '@/config/postgres';
 import { ws } from '@/server';
 import PQueue from "p-queue"
 
@@ -112,7 +112,7 @@ async function setMessage ({ jid, sockUpsert, text }: { jid: string, sockUpsert:
 
     await sock?.sendMessage(jid, { text: "🧠 Um minuto, analisando a informação..." })
 
-    const replayAI = await geminaiAI(text as string)
+    const replayAI = await geminaiAI(jid.split("@")[0], text)
     await sockUpsert.sendMessage(jid, {  text: replayAI || "um minuto" })
   } catch (error) {
     console.error('Erro ao processar mensagem:', error)

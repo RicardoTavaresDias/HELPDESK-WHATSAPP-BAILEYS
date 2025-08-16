@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { env } from './env.config';
+import { env } from './env';
 
 const db = new Pool({
   user: env.USER_DB,                     // usuário do PostgreSQL

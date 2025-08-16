@@ -1,4 +1,4 @@
-import db from "@/config/postgres.config";
+import db from "@/config/postgres";
 
 class Repository {
   async variousqueriesAI (querySQLAI: string) {

@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import { app } from "./app";
-import { env } from "./config/env.config";
+import { env } from "./config/env";
 
 const server = app.listen(env.PORT, () => console.log("Server running on port " + env.PORT))
 

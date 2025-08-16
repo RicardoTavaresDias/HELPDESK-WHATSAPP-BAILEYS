@@ -13,10 +13,18 @@ async function switchFunctions (functionCalls: AllFunctionCalls) {
   
     case 'executeCalledId':
       return functionResult = await command.executeCalledId(functionCalls.args?.id);
+    
+    case 'executeCreateCalled':
+      return functionResult = await command.executeCreateCalled(functionCalls.args?.data);
+
+    case 'executeServices':
+      return functionResult = await command.executeServices(functionCalls.args?.searchServices);
+
+    case 'executeByUser':
+      return functionResult = await command.executeByUser(functionCalls.args?.email);
   
     default:
-      // console.log("nome da função vai ser chamada", functionCalls.name)
-      return // functionCalls.name
+      break
   }
 }
 

@@ -13,4 +13,34 @@ type ExecuteCalledIdCall = {
   args: { id: string };
 };
 
-export type AllFunctionCalls = ExecuteQueryCall | ExecuteCalledsCall | ExecuteCalledIdCall
+export type dataTypeCreateCalled = {
+  idCustomer: string
+  titleCalled: string
+  description: string
+  dateCustomer: string
+  hourCustomer: string
+  idServices: string
+}
+
+type ExecuteCreateCalled = {
+  name: 'executeCreateCalled';
+  args: { data: dataTypeCreateCalled };
+}
+
+type ExecuteServices = {
+  name: 'executeServices';
+  args: { searchServices: string };
+};
+
+type ExecuteByUser = {
+  name: 'executeByUser';
+  args: { email: string };
+};
+
+export type AllFunctionCalls = 
+  ExecuteQueryCall | 
+  ExecuteCalledsCall | 
+  ExecuteCalledIdCall | 
+  ExecuteCreateCalled | 
+  ExecuteServices |
+  ExecuteByUser

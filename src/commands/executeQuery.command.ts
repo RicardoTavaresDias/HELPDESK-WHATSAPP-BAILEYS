@@ -3,9 +3,14 @@ import { tablePostgres } from "@/utils/table-postgres"
 import { Type } from "@google/genai"
 
 async function executeQuery (querySQL: string) {
-  const repository = new Repository()
-  const result = await repository.variousqueriesAI(querySQL)
-  return JSON.stringify(result)
+  try {
+    const repository = new Repository()
+    const result = await repository.variousqueriesAI(querySQL)
+    return JSON.stringify(result)
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }
 
 const executeQueryProperties = {

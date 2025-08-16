@@ -1,4 +1,4 @@
-import { env } from "./env.config";
+import { env } from "./env";
 
 export const authConfig = {
   jwt: {

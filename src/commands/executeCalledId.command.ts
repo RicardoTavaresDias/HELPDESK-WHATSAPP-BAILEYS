@@ -2,9 +2,14 @@ import Repository from "@/repositories/repository"
 import { Type } from "@google/genai"
 
 async function executeCalledId (id: string) {
-  const repository = new Repository()
-  const result = await repository.calledID(id)
-  return JSON.stringify(result)
+  try {
+    const repository = new Repository()
+    const result = await repository.calledID(id)
+    return JSON.stringify(result)
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }
 
 const executeCalledIDProperties = {
