@@ -22,10 +22,10 @@ async function executeCreateCalled (data: dataTypeCreateCalled) {
       }
     })
 
-    return response.data.message
+    return JSON.stringify(response.data.message)
   } catch (error) {
     console.log(error)
-    return error
+    return JSON.stringify(error)
   }
 }
 

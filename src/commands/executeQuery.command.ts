@@ -9,7 +9,7 @@ async function executeQuery (querySQL: string) {
     return JSON.stringify(result)
   } catch (error) {
     console.log(error)
-    return error
+    return JSON.stringify(error)
   }
 }
 

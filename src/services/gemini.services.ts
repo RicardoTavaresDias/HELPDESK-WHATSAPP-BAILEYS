@@ -40,7 +40,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
       model: 'gemini-2.5-flash',
       contents: history.get(userWhatsapp),
       config: {
-        temperature: 0.5,
+        temperature: 0.4,
         tools: [{
           // declarando as propriedades e parametros da função para IA ultilizar
           functionDeclarations: [
@@ -77,7 +77,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
       const geminaiResultQuestion  = await gemini.models.generateContent({
         model: 'gemini-2.5-flash',
         config: {
-          temperature: 0.5
+          temperature: 0.4
         },
         contents: history.get(userWhatsapp)   
       })

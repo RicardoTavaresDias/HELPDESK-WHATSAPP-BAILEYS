@@ -1,32 +1,25 @@
 import db from "@/config/postgres"
 import { Type } from "@google/genai"
 
-async function executeServices (searchServices: string) {
-  console.log(searchServices)
+async function executeServices () {
   try{
-    const respoonse = await db.query(`SELECT id, title_service FROM "services" WHERE LOWER(title_service) LIKE LOWER($1)`, [`'%${searchServices}%'`])
-    return respoonse.rows
+    const respoonse = await db.query(`SELECT id, title_service FROM "services"`)
+    console.log(respoonse.rows)
+    return JSON.stringify(respoonse.rows)
   }catch (error: any) {
-    return error.message
+    return JSON.stringify(error.message)
   }
 }
 
 const executeServicesProperties = {
   name: 'executeServices',
   description: `
-    Busca serviços se existe o nome relacionado a titulo.
+    Lista todos os serviços com id e title_services.
   `.trim(),
   parameters: {
     type: Type.OBJECT,
-    properties: {
-      searchServices: {
-        type: Type.STRING,
-        description: `
-          Informar um nome ou tipo relacionado a serviço que usuario pode informar, será realizado uma busca na tabela serviços pelo title do serviço.
-        `.trim()
-      }
-    },
-    required: ['searchServices']
+    properties: {},
+    required: []
   }
 }
 

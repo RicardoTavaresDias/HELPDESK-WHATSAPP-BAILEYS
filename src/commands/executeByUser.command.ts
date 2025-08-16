@@ -4,10 +4,11 @@ import { Type } from "@google/genai"
 async function executeByUser (email: string) {
   console.log(email)
   try{
-    const respoonse = await db.query(`SELECT id, name, email FROM "user" WHERE email = $1`, [`${email}`])
-    return respoonse.rows
+    const respoonse = await db.query(`SELECT id, name, email FROM "user" WHERE email = '${email}'`)
+    console.log(respoonse.rows)
+    return JSON.stringify(respoonse.rows)
   }catch (error: any) {
-    return error.message
+    return JSON.stringify(error.message)
   }
 }
 
