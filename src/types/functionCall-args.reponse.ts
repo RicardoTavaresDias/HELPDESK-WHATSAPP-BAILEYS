@@ -1,15 +1,10 @@
-type ExecuteQueryCall = {
-  name: 'executeQuery';
-  args: { querySQL: string };
-};
-
-type ExecuteCalledsCall = {
-  name: 'executeCalleds';
+type listCalleds = {
+  name: 'listCalleds';
   args: { emailUser: string };
 };
 
-type ExecuteCalledIdCall = {
-  name: 'executeCalledId';
+type getCalledById = {
+  name: 'getCalledById';
   args: { id: string };
 };
 
@@ -22,25 +17,23 @@ export type dataTypeCreateCalled = {
   idServices: string
 }
 
-type ExecuteCreateCalled = {
-  name: 'executeCreateCalled';
+type createCalled = {
+  name: 'createCalled';
   args: { data: dataTypeCreateCalled };
 }
 
-type ExecuteServices = {
-  name: 'executeServices';
-  args: { searchServices: string };
+type getServices = {
+  name: 'getServices'
 };
 
-type ExecuteByUser = {
-  name: 'executeByUser';
+type getUserByEmail = {
+  name: 'getUserByEmail';
   args: { email: string };
 };
 
 export type AllFunctionCalls = 
-  ExecuteQueryCall | 
-  ExecuteCalledsCall | 
-  ExecuteCalledIdCall | 
-  ExecuteCreateCalled | 
-  ExecuteServices |
-  ExecuteByUser
+  listCalleds | 
+  getCalledById | 
+  createCalled | 
+  getServices |
+  getUserByEmail

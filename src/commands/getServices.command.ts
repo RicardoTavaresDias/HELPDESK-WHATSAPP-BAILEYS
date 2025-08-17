@@ -1,7 +1,7 @@
 import db from "@/config/postgres"
 import { Type } from "@google/genai"
 
-async function executeServices () {
+async function getServices () {
   try{
     const respoonse = await db.query(`SELECT id, title_service FROM "services"`)
     console.log(respoonse.rows)
@@ -11,8 +11,8 @@ async function executeServices () {
   }
 }
 
-const executeServicesProperties = {
-  name: 'executeServices',
+const getServicesProperties = {
+  name: 'getServices',
   description: `
     Lista todos os serviços com id e title_services.
   `.trim(),
@@ -23,4 +23,4 @@ const executeServicesProperties = {
   }
 }
 
-export { executeServices, executeServicesProperties }
+export { getServices, getServicesProperties }

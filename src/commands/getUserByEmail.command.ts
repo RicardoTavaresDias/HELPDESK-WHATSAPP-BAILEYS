@@ -1,7 +1,7 @@
 import db from "@/config/postgres"
 import { Type } from "@google/genai"
 
-async function executeByUser (email: string) {
+async function getUserByEmail (email: string) {
   console.log(email)
   try{
     const respoonse = await db.query(`SELECT id, name, email FROM "user" WHERE email = '${email}'`)
@@ -12,8 +12,8 @@ async function executeByUser (email: string) {
   }
 }
 
-const executeByUserProperties = {
-  name: 'executeByUser',
+const getUserByEmailProperties = {
+  name: 'getUserByEmail',
   description: `
     Busca os dados usuario pelo email.
   `.trim(),
@@ -31,4 +31,4 @@ const executeByUserProperties = {
   }
 }
 
-export { executeByUser, executeByUserProperties }
+export { getUserByEmail, getUserByEmailProperties }

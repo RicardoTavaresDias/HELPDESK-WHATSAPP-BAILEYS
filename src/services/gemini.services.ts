@@ -44,12 +44,11 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         tools: [{
           // declarando as propriedades e parametros da função para IA ultilizar
           functionDeclarations: [
-          //commandProperties.executeQueryProperties,
-          commandProperties.executeCalledsProperties,
-          commandProperties.executeCalledIDProperties,
-          commandProperties.executeCreateCalledProperties,
-          commandProperties.executeServicesProperties,
-          commandProperties.executeByUserProperties
+          commandProperties.listCalledsProperties,
+          commandProperties.getCalledByIdProperties,
+          commandProperties.createCalledProperties,
+          commandProperties.getServicesProperties,
+          commandProperties.getUserByEmailProperties
         ]
         }],
         systemInstruction: prompt // Instruções para IA o que tem que fazer.

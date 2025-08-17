@@ -1,26 +1,23 @@
-import { executeQuery, executeQueryProperties } from "./executeQuery.command";
-import { executeCalleds, executeCalledsProperties } from "./executeCalleds.command"
-import { executeCalledId, executeCalledIDProperties } from "./executeCalledId.command"
-import { executeCreateCalled, executeCreateCalledProperties } from "./executeCreateCalled.command";
-import { executeServices, executeServicesProperties } from "./executeServices.command";
-import { executeByUser, executeByUserProperties } from "./executeByUser.command"
+import { listCalleds, listCalledsProperties } from "./listCalleds.command"
+import { getCalledById, getCalledByIdProperties } from "./getCalledById.command"
+import { createCalled, createCalledProperties } from "./createCalled.command";
+import { getServices, getServicesProperties } from "./getServices.command";
+import { getUserByEmail, getUserByEmailProperties } from "./getUserByEmail.command"
 
 const command = {
-  executeQuery,
-  executeCalleds,
-  executeCalledId,
-  executeCreateCalled,
-  executeServices,
-  executeByUser
+  listCalleds,
+  getCalledById,
+  createCalled,
+  getServices,
+  getUserByEmail
 }
 
 const commandProperties = {
-  executeQueryProperties,
-  executeCalledsProperties,
-  executeCalledIDProperties,
-  executeCreateCalledProperties,
-  executeServicesProperties,
-  executeByUserProperties
+  listCalledsProperties,
+  getCalledByIdProperties,
+  createCalledProperties,
+  getServicesProperties,
+  getUserByEmailProperties
 }
 
 export { command, commandProperties }

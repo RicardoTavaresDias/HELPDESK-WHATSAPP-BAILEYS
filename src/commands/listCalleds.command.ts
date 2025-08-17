@@ -1,10 +1,10 @@
 import Repository from "@/repositories/repository"
 import { Type } from "@google/genai"
 
-async function executeCalledId (id: string) {
+async function listCalleds (emailUser: string) {
   try {
     const repository = new Repository()
-    const result = await repository.calledID(id)
+    const result = await repository.calleds(emailUser)
     return JSON.stringify(result)
   } catch (error) {
     console.log(error)
@@ -12,21 +12,23 @@ async function executeCalledId (id: string) {
   }
 }
 
-const executeCalledIDProperties = {
-  name: 'executeCalledId',
+const listCalledsProperties = {
+  name: 'listCalleds',
   description: `
-    lista o chamado especifico com numero do chamado ou id do chamado.
+    Lista todas as informações do chamado com email.
   `.trim(),
   parameters: {
     type: Type.OBJECT,
     properties: {
-      id: {
+      emailUser: {
         type: Type.STRING,
-        description: "id do chamado ou numero de chamado"
+        description: `
+          email do usuario.
+        `.trim()
       }
     },
-    required: ['id']
+    required: ['emailUser']
   }
 }
 
-export { executeCalledId, executeCalledIDProperties }
+export { listCalleds, listCalledsProperties }

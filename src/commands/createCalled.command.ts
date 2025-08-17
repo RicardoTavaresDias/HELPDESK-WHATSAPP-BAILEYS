@@ -4,8 +4,13 @@ import { env } from "@/config/env";
 import { dataTypeCreateCalled } from "@/types/functionCall-args.reponse";
 import { app } from "@/config/axios";
 
-async function executeCreateCalled (data: dataTypeCreateCalled) {
-  const token = jwt.sign({ user: { role: 'admin' }}, env.SECRET, { expiresIn: "1d" })
+async function createCalled (data: dataTypeCreateCalled) {
+  const token = jwt.sign({ 
+    user: { 
+      id: "1123",
+      name: "IA",
+      role: 'admin' 
+    }}, env.SECRET, { expiresIn: "1d" })
   
   try {
     const response = await app.post("/calleds", {
@@ -29,8 +34,8 @@ async function executeCreateCalled (data: dataTypeCreateCalled) {
   }
 }
 
-const executeCreateCalledProperties = {
-  name: 'executeCreateCalled',
+const createCalledProperties = {
+  name: 'createCalled',
   description: `
     Cria um chamado com os dados fornecidos pelo cliente.
   `.trim(),
@@ -80,4 +85,4 @@ const executeCreateCalledProperties = {
   }
 }
 
-export { executeCreateCalled, executeCreateCalledProperties }
+export { createCalled, createCalledProperties }

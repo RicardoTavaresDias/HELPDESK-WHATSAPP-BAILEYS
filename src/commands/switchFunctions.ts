@@ -5,23 +5,20 @@ async function switchFunctions (functionCalls: AllFunctionCalls) {
   let functionResult
 
   switch (functionCalls.name) {
-    case 'executeQuery':
-      return functionResult = await command.executeQuery(functionCalls.args?.querySQL);
-
-    case 'executeCalleds':
-      return functionResult = await command.executeCalleds(functionCalls.args?.emailUser);
+    case 'listCalleds':
+      return functionResult = await command.listCalleds(functionCalls.args?.emailUser);
   
-    case 'executeCalledId':
-      return functionResult = await command.executeCalledId(functionCalls.args?.id);
+    case 'getCalledById':
+      return functionResult = await command.getCalledById(functionCalls.args?.id);
     
-    case 'executeCreateCalled':
-      return functionResult = await command.executeCreateCalled(functionCalls.args?.data);
+    case 'createCalled':
+      return functionResult = await command.createCalled(functionCalls.args?.data);
 
-    case 'executeServices':
-      return functionResult = await command.executeServices(functionCalls.args?.searchServices);
+    case 'getServices':
+      return functionResult = await command.getServices();
 
-    case 'executeByUser':
-      return functionResult = await command.executeByUser(functionCalls.args?.email);
+    case 'getUserByEmail':
+      return functionResult = await command.getUserByEmail(functionCalls.args?.email);
   
     default:
       break

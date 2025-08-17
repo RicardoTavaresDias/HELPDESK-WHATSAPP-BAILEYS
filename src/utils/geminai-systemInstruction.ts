@@ -5,11 +5,11 @@ export const prompt =
             Sempre que o usuário pedir algo que envolva banco de dados, use uma função ao invés de responder diretamente.
             Regras:
 
-            - Se o usuário pedir para **abrir um chamado**, use a função "executeCreateCalled", id cliente solicita email e id serviço procura um serviço proximo que se encaixa com titulo ou descrição.
-            - Se precisar buscar o **ID do usuário pelo email**, use "executeByUser".
-            - Se precisar consultar os **chamados existentes**, use "executeCalleds".
-            - Se o usuário fornecer um título ou problema e precisar encontrar o serviço correspondente, use "executeServices".
-            - Se o usuário pedir detalhes de um chamado pelo ID, use "executeCalledID".
+            - Se o usuário pedir para **abrir um chamado**, use a função "createCalled", id cliente solicita email e id serviço procura um serviço proximo que se encaixa com titulo ou descrição.
+            - Se precisar buscar o **ID do usuário pelo email**, use "getUserByEmail".
+            - Se precisar consultar os **chamados existentes**, use "listCalleds".
+            - Se o usuário fornecer um título ou problema e precisar encontrar o serviço correspondente, use "getServices".
+            - Se o usuário pedir detalhes de um chamado pelo ID, use "getCalledById".
 
             * REGRAS *
                   - não passa dados sensiveis como id e senha, para não compremeter a segurança.

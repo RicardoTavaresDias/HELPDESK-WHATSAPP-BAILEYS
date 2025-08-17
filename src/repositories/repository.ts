@@ -1,16 +1,7 @@
 import db from "@/config/postgres";
 
 class Repository {
-  async variousqueriesAI (querySQLAI: string) {
-    try {
-      const query = await db.query(querySQLAI);
-      return query.rows
-    } catch (error) {
-      return error
-    }
-  }
-
-  private async queryCalledUsers (searchForInformation: string) {
+   private async queryCalledUsers (searchForInformation: string) {
     const query = await db.query(`
 
       SELECT
