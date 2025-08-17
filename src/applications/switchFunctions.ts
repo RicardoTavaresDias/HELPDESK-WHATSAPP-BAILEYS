@@ -1,4 +1,4 @@
-import { command } from "@/commands";
+import { command } from "./commands";
 import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
 
 async function switchFunctions (functionCalls: AllFunctionCalls) {

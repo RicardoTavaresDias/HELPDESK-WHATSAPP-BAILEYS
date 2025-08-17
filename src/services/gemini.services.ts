@@ -1,7 +1,7 @@
 import { gemini } from "@/config/google"
 import { prompt } from "@/utils/geminai-systemInstruction";
-import { commandProperties } from "@/commands";
-import { switchFunctions } from "@/commands/switchFunctions";
+import { commandProperties } from "@/applications/commands";
+import { switchFunctions } from "@/applications/switchFunctions";
 import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
 
 /*
