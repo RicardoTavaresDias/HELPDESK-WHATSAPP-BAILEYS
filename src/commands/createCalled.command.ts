@@ -29,7 +29,7 @@ async function createCalled (data: dataTypeCreateCalled) {
 
     return JSON.stringify(response.data.message)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return JSON.stringify(error)
   }
 }

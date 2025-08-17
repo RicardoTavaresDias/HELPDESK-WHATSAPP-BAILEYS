@@ -7,7 +7,7 @@ async function getCalledById (id: string) {
     const result = await repository.calledID(id)
     return JSON.stringify(result)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return JSON.stringify(error)
   }
 }

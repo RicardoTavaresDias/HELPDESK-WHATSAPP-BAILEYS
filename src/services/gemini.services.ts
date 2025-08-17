@@ -3,7 +3,6 @@ import { prompt } from "@/utils/geminai-systemInstruction";
 import { commandProperties } from "@/commands";
 import { switchFunctions } from "@/commands/switchFunctions";
 import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
-import { Type } from "@google/genai";
 
 /*
   functionCalls.name => nome da função criada para ser chamada
@@ -13,14 +12,11 @@ import { Type } from "@google/genai";
 const history = new Map()
 
 async function geminaiAI (userWhatsapp: string, question: string) {
-  console.log(history.get(userWhatsapp))
-  console.log('userWhatsapp', userWhatsapp)
+  console.log("MAP ", history.get(userWhatsapp))
 
-  
-  setTimeout(() => history.delete(userWhatsapp), 5 * 60 * 60 * 1000)
+  //const timeout = setTimeout(() => clearMap(userWhatsapp, question), 5 * 60 * 60 * 1000)
 
   if(!history.has(userWhatsapp)){
-    console.log("caiu aqui")
     history.set(userWhatsapp, [{
       role: "user",
       parts: [{
@@ -45,12 +41,20 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         tools: [{
           // declarando as propriedades e parametros da função para IA ultilizar
           functionDeclarations: [
-          commandProperties.listCalledsProperties,
-          commandProperties.getCalledByIdProperties,
-          commandProperties.createCalledProperties,
-          commandProperties.getServicesProperties,
-          commandProperties.getUserByEmailProperties      
-        ]
+            commandProperties.listCalledsProperties,
+            commandProperties.getCalledByIdProperties,
+            commandProperties.createCalledProperties,
+            commandProperties.getServicesProperties,
+            commandProperties.getUserByEmailProperties,
+            {
+              name: "mapClear",
+              description: "fecha o atendimento",
+              parameters: {
+                properties: {},
+                required: []
+              }
+            }      
+          ]
         }],
         systemInstruction: prompt // Instruções para IA o que tem que fazer.
       }
@@ -60,8 +64,11 @@ async function geminaiAI (userWhatsapp: string, question: string) {
     if (responseAI.functionCalls && responseAI.functionCalls.length > 0) {
       const functionCalls = responseAI.functionCalls[0]
 
+
       // Busca tipo de função que a IA vai ultilizar.
-      const functionResult = await switchFunctions(functionCalls as AllFunctionCalls)
+      const functionResult = functionCalls.name === "mapClear" ? 
+        mapClear(userWhatsapp, question) :
+        await switchFunctions(functionCalls as AllFunctionCalls)
 
       history.get(userWhatsapp).push({
         role: 'function',
@@ -82,11 +89,8 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         contents: history.get(userWhatsapp)   
       })
 
-      console.log("Resposta AI com funcção e resultado", geminaiResultQuestion.text)
       return geminaiResultQuestion.text
-      
     } else {
-      console.log("Resposta AI sem Função", responseAI.text)
       return responseAI.text
     }
   } catch (error: any) {
@@ -98,6 +102,16 @@ async function geminaiAI (userWhatsapp: string, question: string) {
     console.error("Erro inesperado na IA:", error)
     return "❌ Ocorreu um erro interno ao processar sua solicitação."
   }
+}
+
+// função para zerar array history
+function mapClear (userWhatsapp: string, question: string) {
+  history.set(userWhatsapp, [{
+    role: "user",
+    parts: [{
+      text: question
+    }]
+  }])
 }
 
 export { geminaiAI }

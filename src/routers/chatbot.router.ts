@@ -8,4 +8,3 @@ const chatbotController = new ChatbotController()
 
 //chatbotRouter.use(ensureAuthenticated)
 chatbotRouter.get("/", chatbotController.get)
-chatbotRouter.get("/show", chatbotController.show)

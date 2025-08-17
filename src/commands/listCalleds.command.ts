@@ -7,7 +7,7 @@ async function listCalleds (emailUser: string) {
     const result = await repository.calleds(emailUser)
     return JSON.stringify(result)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return JSON.stringify(error)
   }
 }
