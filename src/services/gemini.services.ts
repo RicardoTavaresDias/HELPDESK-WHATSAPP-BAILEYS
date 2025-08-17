@@ -3,6 +3,7 @@ import { prompt } from "@/utils/geminai-systemInstruction";
 import { commandProperties } from "@/commands";
 import { switchFunctions } from "@/commands/switchFunctions";
 import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
+import { Type } from "@google/genai";
 
 /*
   functionCalls.name => nome da função criada para ser chamada
@@ -48,7 +49,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
           commandProperties.getCalledByIdProperties,
           commandProperties.createCalledProperties,
           commandProperties.getServicesProperties,
-          commandProperties.getUserByEmailProperties
+          commandProperties.getUserByEmailProperties      
         ]
         }],
         systemInstruction: prompt // Instruções para IA o que tem que fazer.

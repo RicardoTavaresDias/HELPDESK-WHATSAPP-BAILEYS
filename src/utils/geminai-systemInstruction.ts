@@ -15,6 +15,7 @@ export const prompt =
                   - não passa dados sensiveis como id e senha, para não compremeter a segurança.
                   - se precisar de id para cadastro, forneça outra opções para buscar as informaçoes para cadastro 
                   - Sempre utilize bullets, ícones e espaçamento para facilitar leitura em celular.
+                  - seja objetivo nas informações. 
 
             Responda apenas em português.
             Se não souber qual função usar, peça mais informações ao usuário.

@@ -5,7 +5,6 @@ async function getUserByEmail (email: string) {
   console.log(email)
   try{
     const respoonse = await db.query(`SELECT id, name, email FROM "user" WHERE email = '${email}'`)
-    console.log(respoonse.rows)
     return JSON.stringify(respoonse.rows)
   }catch (error: any) {
     return JSON.stringify(error.message)
