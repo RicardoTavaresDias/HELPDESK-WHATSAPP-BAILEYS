@@ -9,19 +9,19 @@ import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
   functionCalls.args => parametro da função brigatório para ser passado na função
 */
 
-const history = new Map()
+const cacheHistory = new Map()
 
 async function geminaiAI (userWhatsapp: string, question: string) {
   
-  if(!history.has(userWhatsapp)){
-    history.set(userWhatsapp, [{
+  if(!cacheHistory.has(userWhatsapp)){
+    cacheHistory.set(userWhatsapp, [{
       role: "user",
       parts: [{
         text: question
       }]
     }])
   } else {
-    history.get(userWhatsapp).push({
+    cacheHistory.get(userWhatsapp).push({
       role: "user",
       parts: [{
         text: question
@@ -32,7 +32,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
   try {
     const responseAI = await gemini.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: history.get(userWhatsapp),
+      contents: cacheHistory.get(userWhatsapp),
       config: {
         temperature: 0.4,
         tools: [{
@@ -67,7 +67,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         mapClear(userWhatsapp, question) :
         await switchFunctions(functionCalls as AllFunctionCalls)
 
-      history.get(userWhatsapp).push({
+      cacheHistory.get(userWhatsapp).push({
         role: 'function',
         parts: [{
           functionResponse: {
@@ -83,7 +83,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         config: {
           temperature: 0.4
         },
-        contents: history.get(userWhatsapp)   
+        contents: cacheHistory.get(userWhatsapp)   
       })
 
       return geminaiResultQuestion.text
@@ -103,7 +103,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
 
 // função para zerar array history
 function mapClear (userWhatsapp: string, question: string) {
-  history.set(userWhatsapp, [{
+  cacheHistory.set(userWhatsapp, [{
     role: "user",
     parts: [{
       text: question
