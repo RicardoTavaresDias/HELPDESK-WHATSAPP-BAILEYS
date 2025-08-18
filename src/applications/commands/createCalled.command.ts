@@ -9,8 +9,8 @@ async function createCalled (data: dataTypeCreateCalled) {
     user: { 
       id: "1123",
       name: "IA",
-      role: 'admin' 
-    }}, env.SECRET, { expiresIn: "1d" })
+      role: 'customer' 
+    }}, env.SECRET, { expiresIn: "15s" })
   
   try {
     const response = await app.post("/calleds", {

@@ -12,10 +12,7 @@ import { AllFunctionCalls } from "@/types/functionCall-args.reponse";
 const history = new Map()
 
 async function geminaiAI (userWhatsapp: string, question: string) {
-  console.log("MAP ", history.get(userWhatsapp))
-
-  //const timeout = setTimeout(() => clearMap(userWhatsapp, question), 5 * 60 * 60 * 1000)
-
+  
   if(!history.has(userWhatsapp)){
     history.set(userWhatsapp, [{
       role: "user",

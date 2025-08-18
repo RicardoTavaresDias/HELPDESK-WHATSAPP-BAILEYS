@@ -3,7 +3,7 @@ import { Type } from "@google/genai"
 
 async function getUserByEmail (email: string) {
   try{
-    const respoonse = await db.query(`SELECT id, name, email FROM "user" WHERE email = '${email}'`)
+    const respoonse = await db.query(`SELECT id, name, email, role FROM "user" WHERE email = '${email}'`)
     return JSON.stringify(respoonse.rows)
   }catch (error: any) {
     console.error(error)

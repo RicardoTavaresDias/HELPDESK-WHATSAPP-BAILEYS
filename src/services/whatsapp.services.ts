@@ -9,6 +9,7 @@ import PQueue from "p-queue"
 let removeSession: () => Promise<void>
 let sock: WASocket | null = null
 let reconnecting = false
+const cacheVerifiedUsers = new Map<string, { valid: boolean, expiresAt: number }>() 
 
  // Adicionar mensagem à fila controlando await varios requisições
 const messageQueue = new PQueue({ concurrency: 5 });
@@ -121,16 +122,25 @@ async function setMessage ({ jid, sockUpsert, text }: { jid: string, sockUpsert:
 
 // Seguraça verificando se usurio esta cadastrado no sistema para uso Whatsapp
 async function verifyUserWhatsapp ({ jid, sockUpsert }: { jid: string, sockUpsert: WASocket }) {
-  const existUserPhone = await db.query(`SELECT * FROM "user" WHERE phone = $1`, [jid?.split("@")[0]])
+  const phoneUser = jid?.split("@")[0]
 
-  if(!existUserPhone.rows.length){
+  if (!cacheVerifiedUsers.has(phoneUser) || cacheVerifiedUsers.get(phoneUser)!.expiresAt < Date.now()){
+    const existUserPhone = await db.query(`SELECT * FROM "user" WHERE phone = $1`, [phoneUser])
+    const isValid = existUserPhone.rows.length > 0
+
+    cacheVerifiedUsers.set(phoneUser, { 
+      valid: isValid, 
+      expiresAt: isValid ? Date.now() + 10 * 60 * 1000 : Date.now() + 1 * 60 * 1000 
+    }) // expiresAt cache 10 min se válido, 1 min se inválido
+  }
+
+  if (cacheVerifiedUsers.get(phoneUser)?.valid === false) {
     await sockUpsert.sendMessage(jid, { 
       text: "Telefone não cadastrado no sistema, realizar cadastro do telefone no seu perfil de acesso, para ter melhor experiencia com suporte Whatsapp." 
     })
-    return false
   }
 
-  return true
+  return cacheVerifiedUsers.get(phoneUser)?.valid
 }
 
 export default bootWhatsappBaileysIA

@@ -10,7 +10,7 @@
 
     <script>
         // Troque pelo IP/porta do seu servidor
-        const ws = new WebSocket('https://teste-xa9g.onrender.com');
+        const ws = new WebSocket('http://localhost:3000'); // http://localhost:3000 || https://teste-xa9g.onrender.com
 
         ws.onopen = () => {
             log('✅ Conectado ao servidor WebSocket');
