@@ -67,15 +67,19 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         mapClear(userWhatsapp, question) :
         await switchFunctions(functionCalls as AllFunctionCalls)
 
-      cacheHistory.get(userWhatsapp).push({
-        role: 'function',
-        parts: [{
-          functionResponse: {
-            name: functionCalls.name,
-            response: { result: functionResult }
-          }
-        }]
-      })
+      if (functionResult !== undefined && functionResult !== null) {
+        cacheHistory.get(userWhatsapp).push({
+          role: 'function',
+          parts: [{
+            functionResponse: {
+              name: functionCalls.name,
+              response: { result: functionResult }
+            }
+          }]
+        })
+      }else {
+        console.error("⚠️ O resultado da função é indefinido ou nulo. Não adicionando à conversa.");
+      }
 
       // Envia o resultado da função de volta para o Gemini
       const geminaiResultQuestion  = await gemini.models.generateContent({
