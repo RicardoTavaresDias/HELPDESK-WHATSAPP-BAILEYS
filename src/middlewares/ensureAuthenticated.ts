@@ -12,6 +12,8 @@ function ensureAuthenticated (request: Request, response: Response, next: NextFu
     const { user } = verify(token, authConfig.jwt.secret)
 
     request.user = {
+      id: user.id,
+      name: user.name,
       role: user.role
     }
     
