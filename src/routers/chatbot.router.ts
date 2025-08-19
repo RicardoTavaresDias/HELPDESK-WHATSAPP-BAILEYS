@@ -6,5 +6,5 @@ import { userAuthorization } from "@/middlewares/userAuthorization";
 export const chatbotRouter = Router()
 const chatbotController = new ChatbotController()
 
-//chatbotRouter.use(ensureAuthenticated)
-chatbotRouter.get("/", chatbotController.get)
+chatbotRouter.use(ensureAuthenticated)
+chatbotRouter.get("/", userAuthorization(["admin"]), chatbotController.get)

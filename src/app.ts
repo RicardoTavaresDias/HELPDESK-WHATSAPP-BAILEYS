@@ -5,7 +5,6 @@ import { errorHandling } from "./middlewares/errorHandling"
 
 const app = express()
 app.use(express.json())
-app.use(router)
 
 const allowedOrigins = [
   'http://localhost:3333/',
@@ -17,6 +16,7 @@ app.use(cors({
   origin: allowedOrigins
 }))
 
+app.use(router)
 app.use(errorHandling)
 
 export { app }
