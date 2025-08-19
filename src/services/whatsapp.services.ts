@@ -21,7 +21,8 @@ async function bootWhatsappBaileysIA () {
   sock =  makeWASocket({
     auth: state,
     printQRInTerminal: false,
-    logger: require('pino')({ level: 'silent' })
+    logger: require('pino')({ level: 'silent' }),
+    connectTimeoutMs: 60000 // 60 segundos
   })
 
   sendMessage()
@@ -74,6 +75,8 @@ function connection () {
   reconnecting = true
 
   if (shouldReconnect) {
+    await new Promise(r => setTimeout(r, 3000)) // espera 3s antes de reconectar
+    
     // Realiza reconexão após perca de conexão.
     await bootWhatsappBaileysIA()
   }else {
