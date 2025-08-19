@@ -119,7 +119,8 @@ async function setMessage ({ jid, sockUpsert, text }: { jid: string, sockUpsert:
     await sock?.sendMessage(jid, { text: "🧠 Um minuto, analisando a informação..." })
 
     const replayAI = await geminaiAI(jid.split("@")[0], text)
-    await sockUpsert.sendMessage(jid, {  text: replayAI || "um minuto" })
+    //@ts-ignore
+    await sockUpsert.sendMessage(jid, {  text: replayAI || await geminaiAI(jid.split("@")[0], "ok") })
   } catch (error) {
     console.error('Erro ao processar mensagem:', error)
   }

@@ -67,6 +67,7 @@ async function geminaiAI (userWhatsapp: string, question: string) {
         mapClear(userWhatsapp, question) :
         await switchFunctions(functionCalls as AllFunctionCalls)
 
+      // Verificação de segurança: Não adicionar a resposta da função se ela for undefined ou null
       if (functionResult !== undefined && functionResult !== null) {
         cacheHistory.get(userWhatsapp).push({
           role: 'function',
