@@ -22,7 +22,9 @@ async function bootWhatsappBaileysIA () {
     auth: state,
     printQRInTerminal: false,
     logger: require('pino')({ level: 'silent' }),
-    connectTimeoutMs: 60000 // 60 segundos
+    connectTimeoutMs: 60000, // 60 segundos
+    markOnlineOnConnect: false,   // reduz tráfego inicial
+    syncFullHistory: false        // evita sync pesado ao conectar
   })
 
   sendMessage()
@@ -76,7 +78,7 @@ function connection () {
 
   if (shouldReconnect) {
     await new Promise(r => setTimeout(r, 3000)) // espera 3s antes de reconectar
-    
+
     // Realiza reconexão após perca de conexão.
     await bootWhatsappBaileysIA()
   }else {
